@@ -1,0 +1,42 @@
+{
+  "figure": "cascade_epsilon",
+  "dataset": "combined",
+  "error_in_percent": true,
+  "data": [
+    {
+      "epsilon": 1e-07,
+      "relative_constraint_error_percent": 0.0,
+      "computation_time_mean_us": 30.849273645914398
+    },
+    {
+      "epsilon": 1e-06,
+      "relative_constraint_error_percent": 0.0002687710765240197,
+      "computation_time_mean_us": 29.897268389105058
+    },
+    {
+      "epsilon": 1e-05,
+      "relative_constraint_error_percent": 0.002942373540856043,
+      "computation_time_mean_us": 28.965322311284048
+    },
+    {
+      "epsilon": 0.0001,
+      "relative_constraint_error_percent": 0.030401543450064922,
+      "computation_time_mean_us": 28.045256910505838
+    },
+    {
+      "epsilon": 0.001,
+      "relative_constraint_error_percent": 0.4552106031128405,
+      "computation_time_mean_us": 27.104026677042803
+    },
+    {
+      "epsilon": 0.01,
+      "relative_constraint_error_percent": 5.165048839169909,
+      "computation_time_mean_us": 26.07348438521401
+    },
+    {
+      "epsilon": 0.1,
+      "relative_constraint_error_percent": 70.69669935473411,
+      "computation_time_mean_us": 26.405904704280157
+    }
+  ]
+}

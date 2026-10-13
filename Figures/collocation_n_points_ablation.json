@@ -1,0 +1,84 @@
+{
+  "figure": "collocation_n_points_ablation",
+  "dataset": "combined",
+  "error_in_percent": true,
+  "data": [
+    {
+      "n_collocation_points": 10,
+      "collocation_relative_constraint_error_percent": -13.579791417769131,
+      "cascade_relative_constraint_error_percent": 0.0,
+      "companion_relative_constraint_error_percent": 0.0,
+      "collocation_time_mean_us": 2.172128840466926,
+      "cascade_time_mean_us": 30.849273645914398,
+      "companion_time_mean_us": 71.27085061867704,
+      "convex_hull_relative_constraint_error_percent": 83.36271824578469,
+      "convex_hull_time_mean_us": 0.3891011206225681
+    },
+    {
+      "n_collocation_points": 100,
+      "collocation_relative_constraint_error_percent": -0.15808416083009078,
+      "cascade_relative_constraint_error_percent": 0.0,
+      "companion_relative_constraint_error_percent": 0.0,
+      "collocation_time_mean_us": 20.014423957198442,
+      "cascade_time_mean_us": 30.849273645914398,
+      "companion_time_mean_us": 71.27085061867704,
+      "convex_hull_relative_constraint_error_percent": 83.36271824578469,
+      "convex_hull_time_mean_us": 0.3891011206225681
+    },
+    {
+      "n_collocation_points": 200,
+      "collocation_relative_constraint_error_percent": -0.056876683527885843,
+      "cascade_relative_constraint_error_percent": 0.0,
+      "companion_relative_constraint_error_percent": 0.0,
+      "collocation_time_mean_us": 39.74822073540856,
+      "cascade_time_mean_us": 30.849273645914398,
+      "companion_time_mean_us": 71.27085061867704,
+      "convex_hull_relative_constraint_error_percent": 83.36271824578469,
+      "convex_hull_time_mean_us": 0.3891011206225681
+    },
+    {
+      "n_collocation_points": 300,
+      "collocation_relative_constraint_error_percent": -0.028229431582360524,
+      "cascade_relative_constraint_error_percent": 0.0,
+      "companion_relative_constraint_error_percent": 0.0,
+      "collocation_time_mean_us": 59.439222424124516,
+      "cascade_time_mean_us": 30.849273645914398,
+      "companion_time_mean_us": 71.27085061867704,
+      "convex_hull_relative_constraint_error_percent": 83.36271824578469,
+      "convex_hull_time_mean_us": 0.3891011206225681
+    },
+    {
+      "n_collocation_points": 400,
+      "collocation_relative_constraint_error_percent": -0.01388524902723712,
+      "cascade_relative_constraint_error_percent": 0.0,
+      "companion_relative_constraint_error_percent": 0.0,
+      "collocation_time_mean_us": 79.22025392996109,
+      "cascade_time_mean_us": 30.849273645914398,
+      "companion_time_mean_us": 71.27085061867704,
+      "convex_hull_relative_constraint_error_percent": 83.36271824578469,
+      "convex_hull_time_mean_us": 0.3891011206225681
+    },
+    {
+      "n_collocation_points": 500,
+      "collocation_relative_constraint_error_percent": -0.00822259273670545,
+      "cascade_relative_constraint_error_percent": 0.0,
+      "companion_relative_constraint_error_percent": 0.0,
+      "collocation_time_mean_us": 99.15637355252919,
+      "cascade_time_mean_us": 30.849273645914398,
+      "companion_time_mean_us": 71.27085061867704,
+      "convex_hull_relative_constraint_error_percent": 83.36271824578469,
+      "convex_hull_time_mean_us": 0.3891011206225681
+    },
+    {
+      "n_collocation_points": 1000,
+      "collocation_relative_constraint_error_percent": -0.0022738683527883993,
+      "cascade_relative_constraint_error_percent": 0.0,
+      "companion_relative_constraint_error_percent": 0.0,
+      "collocation_time_mean_us": 199.65290844357978,
+      "cascade_time_mean_us": 30.849273645914398,
+      "companion_time_mean_us": 71.27085061867704,
+      "convex_hull_relative_constraint_error_percent": 83.36271824578469,
+      "convex_hull_time_mean_us": 0.3891011206225681
+    }
+  ]
+}
