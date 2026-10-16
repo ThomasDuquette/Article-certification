@@ -1,0 +1,303 @@
+% This is the one with the p = 3 splines solving piecewise-polynomials
+@inproceedings{fujioka2005,
+  title={Optimal smoothing splines for detecting extrema from observational data},
+  author={Fujioka, Hiroyuki and Kano, Hiroyuki},
+  booktitle={Proceedings of the 44th IEEE Conference on Decision and Control},
+  pages={3717--3722},
+  year={2005},
+  organization={IEEE}
+}
+
+@article{Kim2002,
+   abstract = {The evaluation of points and the computations of inflection points or cusps on a curve are often necessary in CAGD applications. When a curve is represented in a B-spline form, such computations can be made easier once it is transformed into a set of piecewise polynomial curves in power form. The usual practice of the transformation of a B-spline curve into a set of piecewise polynomial curves in power form is done either by a knot refinement followed by basis conversions, or by applying a Taylor expansion on each knot span of a B-spline curve. Presented in this paper is a new algorithm to convert a B-spline curve into a set of piecewise polynomial curves in power form. Experiment shows that the proposed algorithm significantly outperforms the conventional approach when one or more control points of a B-spline curve are continuously moving. © 2002 Elsevier Science Ltd. All rights reserved.},
+   author = {D. S. Kim and J. Ryu and H. C. Lee and H. Shin},
+   doi = {10.1016/S0010-4485(01)00090-2},
+   issn = {00104485},
+   issue = {4},
+   journal = {Computer-Aided Design},
+   keywords = {B-spline,Basis conversion,Dynamic curve,Polynomial,Power form,Taylor expansion},
+   month = {4},
+   pages = {337-345},
+   publisher = {Elsevier},
+   title = {The conversion of a dynamic B-spline curve into piecewise polynomials in power form},
+   volume = {34},
+   year = {2002}
+}
+
+@article{Gasparetto2007,
+   abstract = {A new method for smooth trajectory planning of robot manipulators is described in this paper. In order to ensure that the resulting trajectory is smooth enough, an objective function containing a term proportional to the integral of the squared jerk (defined as the derivative of the acceleration) along the trajectory is considered. Moreover, a second term, proportional to the total execution time, is added to the expression of the objective function. In this way it is not necessary to define the total execution time before running the algorithm. Fifth-order B-splines are then used to compose the overall trajectory. With respect to other trajectory optimization techniques, the proposed method enables one to set kinematic constraints on the robot motion, expressed as upper bounds on the absolute values of velocity, acceleration and jerk. The algorithm has been tested in simulation yielding good results, which have also been compared with those provided by another important trajectory planning technique. © 2006 Elsevier Ltd. All rights reserved.},
+   author = {A. Gasparetto and V. Zanotto},
+   doi = {10.1016/j.mechmachtheory.2006.04.002},
+   issue = {4},
+   journal = {Mechanism and Machine Theory},
+   pages = {455-471},
+   title = {A new method for smooth trajectory planning of robot manipulators},
+   volume = {42},
+   year = {2007}
+}
+
+@article{technology2007,
+   abstract = {Optimal motion planning is very important to the operation of robot manipulators. Its main target is the generation of a trajectory from start to goal that satisfies objectives, such as minimizing path traveling distance or time interval, lowest energy consumption or obstacle avoidance and satisfying the robot's kinematics and dynamics. Review, discussion and analysis of optimization techniques to find the optimal trajectory either in Cartesian space or joint space are presented and investigated. Optimal trajectory selection approaches such as kinematics and dynamics techniques with various constraints are presented and explained. Although the kinematics approach is simple and straight forward, it will experience some problems in implementation because of lack of Inertia and torque constraints. The application of Genetic Algorithms to find the optimal trajectory of manipulators especially in the obstacle avoidance is also highlighted. Combining the Genetic Algorithms with other classical optimization methods proves to have better performance as a hybrid optimization technique.},
+   author = {AA Ata - Journal of Engineering Science and technology and undefined 2007},
+   issue = {1},
+   journal = {academia.eduAA AtaJournal of Engineering Science and technology, 2007•academia.edu},
+   keywords = {Energy,Generalized Pattern Search,Genetic Algorithms,Minimum time,Obstacle avoidance,Optimal trajectory},
+   pages = {32-54},
+   title = {Optimal trajectory planning of manipulators: a review},
+   volume = {2},
+   year = {2007}
+}
+
+@article{Pan2012,
+   abstract = {We present a novel trajectory computation algorithm to smooth piecewise linear collision-free trajectories computed by sample-based motion planners. Our approach uses cubic B-splines to generate trajectories that are C2 almost everywhere, except on a few isolated points. The algorithm performs local spline refinement to compute smooth, collision-free trajectories and it works well even in environments with narrow passages. We also present a fast and reliable algorithm for collision checking between a robot and the environment along the B-spline trajectories. We highlight the performance of our algorithm on complex benchmarks, including path computation for rigid and articulated models in cluttered environments. © 2012 The Author(s).},
+   author = {Jia Pan and Liangjun Zhang and Dinesh Manocha},
+   doi = {10.1177/0278364912453186},
+   issn = {02783649},
+   issue = {10},
+   journal = {journals.sagepub.comJ Pan, L Zhang, D ManochaThe International Journal of Robotics Research, 2012•journals.sagepub.com},
+   keywords = {Animation,path planning for manipulators,simulation,virtual reality},
+   month = {9},
+   pages = {1155-1175},
+   title = {Collision-free and smooth trajectory computation in cluttered environments},
+   volume = {31},
+   year = {2012}
+}
+
+@article{Liu2013,
+   abstract = {In this paper a high smooth trajectory planning method is presented to improve the practical performance of tracking control for robot manipulators. The strategy is designed as a combination of the planning with multi-degree splines in Cartesian space and multi-degree B-splines in joint space. Following implementation, under the premise of precisely passing the via-points required, the cubic spline is used in Cartesian space planning to make either the velocities or the accelerations at the initial and ending moments controllable for the end effector. While the septuple B-spline is applied in joint space planning to make the velocities, accelerations and jerks bounded and continuous, with the initial and ending values of them configurable. In the meantime, minimum-time optimization problem is also discussed. Experimental results show that, the proposed approach is an effective solution to trajectory planning, with ensuring a both smooth and efficiency tracking performance with fluent movement for the robot manipulators. © 2012 Elsevier Ltd. All rights reserved.},
+   author = {Huashan Liu and Xiaobo Lai and Wenxiang Wu},
+   doi = {10.1016/j.rcim.2012.08.002},
+   issn = {07365845},
+   issue = {2},
+   journal = {Robotics and Computer-Integrated Manufacturing},
+   keywords = {B-spline,Robot,Spline,Time optimization,Trajectory planning},
+   month = {4},
+   pages = {309-317},
+   title = {Time-optimal and jerk-continuous trajectory planning for robot manipulators with kinematic constraints},
+   volume = {29},
+   year = {2013}
+}
+
+@article{Loock2015,
+   abstract = {When optimizing the performance of constrained robotic system, the motion trajectory plays a crucial role. In this research the motion planning problem for systems that admit a polynomial description of the system dynamics through differential flatness is tackled by parameterizing the system's so-called flat output as a polynomial spline. Using basic properties of B-splines, sufficient conditions on the spline coefficients are derived ensuring satisfaction of the operating constraints over the entire time horizon. Furthermore, an intuitive relaxation is proposed to tackle conservatism and a supporting software package is released. Finally, to illustrate the overall approach and potential, a numerical benchmark of a flexible link manipulator is discussed.},
+   author = {W Van Loock and G Pipeleers and J Swevers - Mechanical Sciences and undefined 2015},
+   doi = {10.5194/ms-6-163-2015},
+   journal = {ms.copernicus.orgW Van Loock, G Pipeleers, J SweversMechanical Sciences, 2015•ms.copernicus.org},
+   pages = {163-171},
+   title = {B-spline parameterized optimal motion trajectories for robotic systems with guaranteed constraint satisfaction},
+   volume = {6},
+   year = {2015}
+}
+
+@article{Noreen2016,
+   abstract = {Optimal path planning refers to find the collision free, shortest, and smooth route between start and goal positions. This task is essential in many robotic applications such as autonomous car, surveillance operations, agricultural robots, planetary and space exploration missions. Rapidly-exploring Random Tree Star (RRT*) is a renowned sampling based planning approach. It has gained immense popularity due to its support for high dimensional complex problems. A significant body of research has addressed the problem of optimal path planning for mobile robots using RRT* based approaches. However, no updated survey on RRT* based approaches is available. Considering the rapid pace of development in this field, this paper presents a comprehensive review of RRT* based path planning approaches. Current issues relevant to noticeable advancements in the field are investigated and whole discussion is concluded with challenges and future research directions.},
+   author = {I Noreen and A Khan and Z Habib - International Journal of Advanced and undefined 2016},
+   issue = {11},
+   journal = {uhb.edu.saI Noreen, A Khan, Z HabibInternational Journal of Advanced Computer Science and Applications, 2016•uhb.edu.sa},
+   keywords = {RRT*,future directions,mobile robots,optimal path,sampling based planning,survey},
+   title = {Optimal path planning using RRT* based approaches: a survey and future directions},
+   volume = {7},
+   year = {2016}
+}
+
+@article{edelman1995polynomial,
+  title={Polynomial roots from companion matrix eigenvalues},
+  author={Edelman, Alan and Murakami, Hiroshi},
+  journal={Mathematics of Computation},
+  volume={64},
+  number={210},
+  pages={763--776},
+  year={1995}
+}
+
+@MISC{eigenweb,
+  author = {Ga\"{e}l Guennebaud and Beno\^{i}t Jacob and others},
+  title = {Eigen},
+  howpublished = {https://libeigen.gitlab.io},
+  year = {2010}
+ }
+
+@article{Lu2017,
+   abstract = {The problem of minimum time-jerk trajectory planning for a robot is discussed in this paper. The optimal objective function is composed of two segments along the trajectory, which are the proportional to the total execution time and the proportional to the integral of the squared jerk (which denotes the derivative of the acceleration). The augmented Lagrange constrained particle swarm optimization (ALCPSO) algorithm, which combines the constrained particle swarm optimization (CPSO) with the augmented Lagrange multiplier (ALM) method, is proposed to optimize the objective function. In this algorithm, falling into a local best value can be avoided because a new particle swarm is generated per initial procedure, and the best value gained from the former generation is saved and delivered to the next generation during the iterative search procedure to enable the best value to be found more easily and more quickly. Finally, the proposed algorithm is tested on a planar 3-degree-of-freedom (DOF) robot; the simulation results show that the algorithm is effective, offering a solution to the time-jerk optimal trajectory planning problem of a robot under nonlinear constraints.},
+   author = {Shaotian Lu and Jingdong Zhao and Li Jiang and Hong Liu},
+   doi = {10.1155/2017/1921479},
+   issn = {15635147},
+   journal = {Wiley Online Library},
+   publisher = {Hindawi Limited},
+   title = {Solving the Time‐Jerk Optimal Trajectory Planning Problem of a Robot Using Augmented Lagrange Constrained Particle Swarm Optimization},
+   volume = {2017},
+   year = {2017}
+}
+
+@article{Gallant2018,
+   abstract = {The payload capacity of robotic manipulators is often considered to be the same throughout their workspace. However, the actual capacity largely depends on posture, velocity, acceleration and actuator limits. This work studies a method to increase the payload capacity of manipulators through trajectory optimization. This optimization is performed on a task basis and therefore, the load-carrying capacity varies from one task to another. Although the studied method is general and is not limited to specific robot architectures, an analysis of the method is conducted based on its application to a planar RR serial manipulator in a vertical plane. This manipulator is the most appropriate as a simple test case because most manipulators are built in such a way that most of the vertical motion of the manipulator is done by two parallel revolute joints: planar RR mechanism. Simulation and experimental results show that the payload capacity can be greatly increased compared to nominal values. It is also shown that, although the trajectories produced are not time optimal, the method is much more versatile and much simpler to implement than some other optimal control methods. The accompanying video provides a summary of the method and the results.},
+   author = {André Gallant and Clément Gosselin},
+   doi = {10.1016/j.mechmachtheory.2017.09.016},
+   issn = {0094114X},
+   journal = {Mechanism and Machine Theory},
+   keywords = {Parametric trajectory,Robot dynamics,Robot payload capacity,Trajectory optimization},
+   month = {3},
+   pages = {502-514},
+   publisher = {Elsevier Ltd},
+   title = {Extending the capabilities of robotic manipulators using trajectory optimization},
+   volume = {121},
+   year = {2018}
+}
+
+@article{Wei2018,
+   abstract = {In a future intelligent factory, a robotic manipulator must work efficiently and safely in a Human–Robot collaborative and dynamic unstructured environment. Autonomous path planning is the most important issue which must be resolved first in the process of improving robotic manipulator intelligence. Among the path-planning methods, the Rapidly Exploring Random Tree (RRT) algorithm based on random sampling has been widely applied in dynamic path planning for a high-dimensional robotic manipulator, especially in a complex environment because of its probability completeness, perfect expansion, and fast exploring speed over other planning methods. However, the existing RRT algorithm has a limitation in path planning for a robotic manipulator in a dynamic unstructured environment. Therefore, an autonomous obstacle avoidance dynamic path-planning method for a robotic manipulator based on an improved RRT algorithm, called Smoothly RRT (S-RRT), is proposed. This method that targets a directional node extends and can increase the sampling speed and efficiency of RRT dramatically. A path optimization strategy based on the maximum curvature constraint is presented to generate a smooth and curved continuous executable path for a robotic manipulator. Finally, the correctness, effectiveness, and practicability of the proposed method are demonstrated and validated via a MATLAB static simulation and a Robot Operating System (ROS) dynamic simulation environment as well as a real autonomous obstacle avoidance experiment in a dynamic unstructured environment for a robotic manipulator. The proposed method not only provides great practical engineering significance for a robotic manipulator’s obstacle avoidance in an intelligent factory, but also theoretical reference value for other type of robots’ path planning.},
+   author = {Kun Wei and Bingyin Ren},
+   doi = {10.3390/s18020571},
+   issn = {14248220},
+   issue = {2},
+   journal = {Sensors (Switzerland)},
+   title = {A method on dynamic path planning for robotic manipulator autonomous obstacle avoidance based on an improved RRT algorithm},
+   volume = {18},
+   year = {2018}
+}
+
+@article{Wang2019,
+   abstract = {In this paper, a smooth point-to-point trajectory planning method for industrial robots is proposed. The trajectory is planned in the joint space. The joint motion is divided into three parts, namely accelerated part, constant velocity part and decelerated part. In the accelerated part and decelerated part, the acceleration is planned with fourth-order polynomial formed with the property of the root multiplicity. Then near time-optimal trajectory can be obtained by maximizing the constant velocity part under kinematical constraints. The results show that the fourth-order polynomial formed with the property of the root multiplicity is determined by only one coefficient. Compared to the classical description, the arduous stage of solving the numerous polynomial coefficients can be eliminated. With the proposed trajectory planning method, the displacement, velocity, acceleration and jerk of each joint and end-effector are all continuous. At the initial moment and end moment, the velocity, acceleration and jerk of each joint and end-effector are zero. The velocity, acceleration and jerk of each joint meet the kinematical constraints. The end-effector moves smoothly and the proposed trajectory planning method is very effective.},
+   author = {He Wang and Heng Wang and Jiahai Huang and Bin Zhao and Long Quan},
+   doi = {10.1016/J.MECHMACHTHEORY.2019.05.002},
+   issn = {0094-114X},
+   journal = {Mechanism and Machine Theory},
+   keywords = {High-order polynomial curve,Industrial robot,Kinematical constraint,Trajectory planning},
+   month = {9},
+   pages = {284-293},
+   publisher = {Pergamon},
+   title = {Smooth point-to-point trajectory planning for industrial robots with kinematical constraints based on high-order polynomial curve},
+   volume = {139},
+   year = {2019}
+}
+
+@article{Lakshmanan2019,
+   abstract = {In motion planning problems for autonomous robots, such as self-driving cars, the robot must ensure that its planned path is not in close proximity to obstacles in the environment. However, the problem of evaluating the proximity is generally non-convex and serves as a significant computational bottleneck for motion planning algorithms. In this paper, we present methods for a general class of absolutely continuous parametric curves to compute: (i) the minimum separating distance, (ii) tolerance verification, and (iii) collision detection. Our methods efficiently compute bounds on obstacle proximity by bounding the curve in a convex region. This bound is based on an upper bound on the curve arc length that can be expressed in closed form for a useful class of parametric curves including curves with trigonometric or polynomial bases. We demonstrate the computational efficiency and accuracy of our approach through numerical simulations1 of several proximity problems. © 2019, Robotics: Science and Systems. All rights reserved.},
+   author = {Arun Lakshmanan and Andrew Patterson and Venanzio Cichella and Naira Hovakimyan},
+   doi = {10.15607/RSS.2019.XV.042},
+   isbn = {9780992374754},
+   issn = {2330765X},
+   journal = {Robotics: Science and Systems},
+   publisher = {MIT Press Journals},
+   title = {Proximity Queries for Absolutely Continuous Parametric Curves},
+   year = {2019}
+}
+
+@article{Almasri2021,
+   author = {E Almasri and MK Uyguroğlu},
+   title = {Trajectory optimization in robotic applications, survey of recent developments},
+   year = {2021}
+}
+
+@article{Wang2022,
+   abstract = {Continuous formulations of trajectory planning problems have two main benefits. First, constraints are guaranteed to be satisfied at all times. Secondly, dynamic obstacles can be naturally considered with time. This paper introduces a novel B-spline based trajectory optimization method for multi-jointed robots that provides a continuous trajectory with guaranteed continuous constraints satisfaction. At the core of this method, B-spline basic operations, like addition, multiplication, and derivative, are rigorously defined and applied for problem formulation. B-spline unique characteristics, such as the convex hull and smooth curves properties, are utilized to reformulate the original continuous optimization problem into a finite-dimensional problem. Collision avoidance with static obstacles is achieved using the signed distance field, while that with dynamic obstacles is accomplished via constructing time-varying separating hyperplanes. Simulation results on various robots validate the effectiveness of the algorithm. In addition, this paper provides experimental validations with a 6-link FANUC robot avoiding static and moving obstacles.},
+   author = {Changhao Wang and Ting Xu and Masayoshi Tomizuka},
+   month = {12},
+   title = {Continuous Trajectory Optimization via B-splines for Multi-jointed Robotic Systems},
+   year = {2022}
+}
+
+@article{Paing2022,
+   abstract = {In motion trajectory optimization of industrial machines, discrete points on a trajectory are typically considered for calculation. However, discrete constraints on grid points for calculation may violate the machine kinematic limits, inducing large tracking errors along a predefined geometric path. In contrast, increasing grid points enlarges the computational complexity. In this study, a method to achieve guaranteed kinematic constraints of a time-optimal trajectory is investigated. A cubic B-spline was used to parameterize the trajectory for acceleration and jerk continuity. The kinematic constraints were proposed based on spline control points and variable geometric derivatives using the convex hull and the local modification properties of the B-splines. The evaluation was performed with a jerk-constrained time-optimal trajectory generation approach by applying different geometric paths, kinematic limits, and problem grid sizes. The simulation results showed that the proposed method guaranteed smoothness and time optimality of the trajectory while satisfying kinematic constraints for all horizons. The experimental results with an industrial feed drive system validated that the proposed method provided a smoother trajectory, reducing the average tracking error by 12%.},
+   author = {MS Paing and N Uchiyama - The International Journal of Advanced and undefined 2022},
+   doi = {10.1007/S00170-022-09517-1},
+   isbn = {0123456789},
+   issn = {14333015},
+   issue = {5-6},
+   journal = {SpringerMS Paing, N UchiyamaThe International Journal of Advanced Manufacturing Technology, 2022•Springer},
+   keywords = {B-splines,Convex hull,Guaranteed kinematic constraints,Local modification,Smoothness,Time-optimal trajectory},
+   month = {7},
+   pages = {3385-3398},
+   publisher = {Springer Science and Business Media Deutschland GmbH},
+   title = {A spline-based approach to smooth and time-optimal trajectory generation for CNC machines with guaranteed kinematic constraints},
+   volume = {121},
+   year = {2022}
+}
+
+@article{Chudy2023,
+   abstract = {A new differential-recurrence relation for the B-spline functions of the same degree is proved. From this relation, a recursive method of computing the coefficients of B-spline functions of degree m in the Bernstein–Bézier form is derived. Its complexity is proportional to the number of coefficients in the case of coincident boundary knots. This means that, asymptotically, the algorithm is optimal. In other cases, the complexity is increased by at most O(m3). When the Bernstein–Bézier coefficients of B-spline basis functions are known, it is possible to compute any B-spline function in linear time with respect to its degree by performing the geometric algorithm proposed recently by the authors. This algorithm scales well when evaluating the B-spline curve at multiple points, e.g., in order to render it, since one only needs to find the coefficients for each knot span once. When evaluating many B-spline curves at multiple points (as is the case when rendering tensor product B-spline surfaces), such approach has lower computational complexity than using the de Boor–Cox algorithm. The numerical tests show that the new method is efficient. The problem of finding the coefficients of the B-spline functions in the power basis can be solved similarly.},
+   author = {Filip Chudy and Paweł Woźny},
+   doi = {10.1016/j.cad.2022.103434},
+   issn = {00104485},
+   issue = {2},
+   journal = {Computer-Aided Design},
+   keywords = {B-spline curves and surfaces,B-spline functions,Bernstein–Bézier form,Bézier curves,De Boor–Cox algorithm,Recurrence relations},
+   month = {1},
+   pages = {103434},
+   publisher = {Elsevier},
+   title = {Linear-Time Algorithm for Computing the Bernstein–Bézier Coefficients of B-spline Basis Functions},
+   volume = {154},
+   year = {2023}
+}
+
+@article{Hou2023,
+   abstract = {To address the issues of low efficiency and lengthy running time associated with trajectory planning for 6-degree-of-freedom manipulators, this paper introduces a novel solution that generates a time-optimal path for a manipulator while adhering to its kinematic limitations. The proposed method comprises several stages. Firstly, the kinematics of the manipulator are analyzed. Secondly, the manipulator’s joint-space path points are interpolated via the quintic B-spline curve. Subsequently, the non-dominated sorting genetic algorithm II (NSGA-II) is improved by applying reinforcement learning to optimize its crossover and mutation probabilities, and the variable neighborhood search (VNS) algorithm is integrated to enhance its local search capability. Finally, the joint increments and running time of the manipulator are optimized using the improved NSGA-II, and the time-optimal trajectory is then determined by simulation on MATLAB. Furthermore, compared with other conventional optimization methods, the proposed approach has reduced the total running time by 19.26%, effectively improving the working efficiency of the manipulator. © 2023 by the authors.},
+   author = {Jie Hou and Juan Du and Zhi Chen},
+   doi = {10.3390/app13116757},
+   issn = {20763417},
+   issue = {11},
+   journal = {Applied Sciences (Switzerland)},
+   keywords = {NSGA-II algorithm,VNS algorithm,manipulator,reinforcement learning,time-optimal trajectory planning},
+   month = {6},
+   publisher = {MDPI},
+   title = {Time-Optimal Trajectory Planning for the Manipulator Based on Improved Non-Dominated Sorting Genetic Algorithm II},
+   volume = {13},
+   year = {2023}
+}
+
+@article{Lozer2025,
+   abstract = {In this paper, a minimum-jerk trajectory planning approach for redundant manipulators is presented. The proposed approach leverages not only the optimization of the time intervals between each of the way points of the assigned path, but also the optimal positions of a selected robot joint to reduce the jerk of the robot end-effector. This multi-stage optimization strategy is validated through extensive numerical simulations and experimental tests on a robot with seven degrees of freedom performing a pick-and-place motion. The results of the tests, supported by accelerometer measurements of the vibrations of the robot end-effector, prove the performance of the proposed approach in reducing both the acceleration and the jerk levels of the redundant manipulator in comparison with a state-of-the-art trajectory planning technique.},
+   author = {Federico Lozer and Lorenzo Scalera and Paolo Boscariol and Alessandro Gasparetto},
+   doi = {10.1016/j.robot.2025.105049},
+   issn = {09218890},
+   issue = {19},
+   journal = {Robotics and Autonomous Systems},
+   keywords = {Mechanical vibration,Optimization,Redundancy,Robotics,Trajectory planning},
+   month = {10},
+   pages = {105049},
+   publisher = {North-Holland},
+   title = {Planning optimal minimum-jerk trajectories for redundant robots},
+   volume = {192},
+   year = {2025}
+}
+
+@article{Dirckx2026,
+   abstract = {Generating time-optimal, collision-free trajectories for autonomous mobile robots involves a fundamental trade-off between guaranteeing safety and managing computational complexity. State-of-the-art approaches formulate spline-based motion planning as a single Optimal Control Problem (OCP) but often suffer from high computational cost because they include separating hyperplane parameters as decision variables to enforce continuous collision avoidance. This paper presents a novel method that alleviates this bottleneck by decoupling the determination of separating hyperplanes from the OCP. By treating the separation theorem as an independent classification problem solvable via a linear system or quadratic program, the proposed method eliminates hyperplane parameters from the optimisation variables, effectively transforming non-convex constraints into linear ones. Experimental validation demonstrates that this decoupled approach reduces trajectory computation times up to almost 60% compared to fully coupled methods in obstacle-rich environments, while maintaining rigorous continuous safety guarantees.},
+   author = {Dries Dirckx and Jan Swevers and Wilm Decré},
+   keywords = {cs.RO},
+   month = {3},
+   title = {Accelerated Spline-Based Time-Optimal Motion Planning with Continuous Safety Guarantees for Non-Differentially Flat Systems},
+   year = {2026}
+}
+
+@article{Wang2022BPOMP,
+   author = {C Wang and HC Lin and S Jin and X Zhu and L Sun - 2022 American … and undefined 2022},
+   journal = {ieeexplore.ieee.orgC Wang, HC Lin, S Jin, X Zhu, L Sun, M Tomizuka2022 American Control Conference (ACC), 2022•ieeexplore.ieee.org},
+   title = {Bpomp: A bilevel path optimization formulation for motion planning},
+   year = {2022}
+}
+
+@article{Zhou2023,
+   author = {Y Zhou and G Han and Z Wei and Z Huang and X Chen - Applied Sciences and undefined 2023},
+   journal = {mdpi.comY Zhou, G Han, Z Wei, Z Huang, X ChenApplied Sciences, 2023•mdpi.com},
+   title = {A time-optimal continuous jerk trajectory planning algorithm for manipulators}
+}
+
+@article{de1974splines,
+  title={Splines with nonnegative B-spline coefficients},
+  author={De Boor, Carl and Daniel, James W},
+  journal={Mathematics of computation},
+  volume={28},
+  number={126},
+  pages={565--568},
+  year={1974}
+}
+
+@inproceedings{doiron2026accelerating,
+  title={Accelerating Trajectory Optimization by Exploiting B-Spline Gradient Structure},
+  author={Doiron, Nikos and Duquette, Thomas and Djogdom, Gilde Vanel Tchane and Gallant, Andr{\'e}},
+  booktitle={2026 IEEE International Conference on Robotics and Automation (ICRA)},
+  pages={22372--22379},
+  year={2026},
+  organization={IEEE}
+}

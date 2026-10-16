@@ -35,17 +35,16 @@
 \hyphenation{op-tical net-works semi-conduc-tor IEEE-Xplore}
 % updated with editorial comments 8/9/2021
 
-\title{XXX}
+\title{A Sound and Efficient Method for B-Spline Extrema Computation}
 
 % Journal name
-\journal{XXX}
+\journal{Robotics and Automation Letters}
 
 % Highlights (for submission only, not typeset in final paper)
 \usepackage{etoolbox}
 \newcommand{\HIGHLIGHT}[1]{\par\textbf{Highlight:} #1\par}
 
 \begin{document}
-
 \begin{frontmatter}
 
 % Authors and affiliations
@@ -65,15 +64,18 @@
 
 \begin{abstract}
 % The background
-
 % The proposed approach
-
 % The evaluation / results
+B-splines are widely used in robotic trajectory optimization for manipulators and mobile robots. For such robots to move through the real world, their trajectories must satisfy kinematic constraints that present as bounds actuator position, velocity, acceleration, or higher derivatives.
+Common approaches either bound the extrema through the control points (convex hull property), which is sound but conservative, or sample the trajectory, which can underestimate the extrema and miss violations. 
+In this work, we propose a new method to find extrema of a B-spline and its derivatives. The method is based on the piecewise-polynomial property of the B-splines, which is combined with a cascading Newton algorithm. We prove that the method is sound and provides strong guarantees under stated assumptions and evaluate it against the convex hull and the discretization methods.
+Results show the method finds the extrema to a higher precision while maintaining competitive computational efficiency. It can reach relative errors of less than $10^{-7}$ while having a similar computation time to that of a discretization with 360 points.
+
 
 \end{abstract}
 
 \begin{keyword}
-Keyword1 \sep Keyword2 \sep Keyword3
+B-splines \sep Robot kinematics \sep Formal verification
 \end{keyword}
 \end{frontmatter}
 
@@ -82,38 +84,37 @@ Keyword1 \sep Keyword2 \sep Keyword3
 
 B-splines are widely used in robotic trajectory optimization due to their smoothness, compact parametric representation, and suitability for numerical optimization. These properties make them particularly attractive for generating trajectories for robotic manipulators and autonomous vehicles, where trajectories must satisfy kinematic constraints throughout their execution.
 
-Verifying these constraints over a continuous trajectory remains challenging. In particular, determining the extrema of trajectory quantities, such as velocity and acceleration, is essential to establish whether prescribed bounds are satisfied at every instant. Exploiting the piecewise-polynomial structure of B-splines makes it possible to formulate extremum finding as a root-finding problem. However, solving these problems efficiently and reliably remains a challenge, particularly when repeated evaluations are required during trajectory optimization or certification.
+However, verifying these constraints robustly over a continuous trajectory remains challenging. In particular, to establish whether constraints are satisfied at every instant, it is essential to determine the extrema of the B-splines relevant to the prescribed bounds. Exploiting the piecewise-polynomial structure of B-splines makes it possible to formulate extremum finding as a root-finding problem. 
 
-Existing approaches commonly rely on the convex-hull property of B-splines or finite trajectory discretization to assess constraint satisfaction. Although convex-hull-based methods provide sufficient conditions for feasibility, they can be conservative and reject trajectories that satisfy the constraints. Discretization-based methods, in contrast, can overlook violations occurring between samples and may require dense sampling to achieve adequate resolution. These limitations motivate methods that can determine trajectory extrema efficiently while providing rigorous guarantees on their results.
+Nevertheless, researchers have historically preferred existing approaches that are based on the convex-hull property of B-splines or finite trajectory discretization to assess constraint satisfaction. Although both methods have their benefits, none provides a simulatneously sound and tight approximation of the extrema.
 
-This article addresses the problem of finding extrema of B-spline trajectories by exploiting their piecewise-polynomial representation. We develop a computational pipeline incorporating a context-aware, bounded Newton algorithm and establish theoretical guarantees for the proposed method. The resulting approach aims to provide an efficient alternative to conventional trajectory verification techniques without relying solely on conservative bounds or dense discretization.
-
-We evaluate the proposed method for B-spline trajectory certification in robotic manipulators using randomized and optimized trajectory datasets comprising over 30,000 distinct B-splines.
+This article addresses the problem of finding extrema of B-spline trajectories by exploiting their piecewise-polynomial representation. We develop a computational pipeline incorporating a cascade of safeguarded Newton searches and establish theoretical guarantees for the proposed method. The resulting approach aims to provide an efficient alternative to conventional trajectory verification techniques without relying on overconservative bounds or dense discretization.
 
 \subsection{Contributions}
 
 The main contributions of this article are:
 \begin{itemize}
     \item We develop a pipeline for finding extrema of B-spline trajectories by exploiting their piecewise-polynomial structure.
-    \item We introduce a context-aware, bounded Newton algorithm and formally establish its guarantees.
+    \item We introduce a cascade of safeguarded Newton searches and formally establish its guarantees.
     \item We evaluate its accuracy and computational efficiency against the convex hull and the discretization methods. 
 \end{itemize}
 
-% Giving structure
-\subsection{Article structure}
+The article is structured as follows. In Sec.~\ref{sec:related_works}, we discuss related works. In Sec.~\ref{sec:problem_statement}, we formally define the problem. We give the proposed method in Sec.~\ref{sec:proposed_method}, and derive its complexity analysis in Sec.~\ref{sec:complexity_analysis}. We give the experimental setup in Sec.~\ref{sec:experimental_setup}, and present and discuss the results in Sec.~\ref{sec:results_and_discussion}. 
 
-The article is structured as follows. In Sec.~\ref{XXX}, we give XXX.
 
 \section{Related Works} \label{sec:related_works}
-% Defining key terms
+B-splines are widely used to parametrize robot trajectories because they are piecewise polynomial with compact support, which gives local control, and they are $C^{p-2}$ continuous for degree $p$ at knots of multiplicity one, which allows them to be deployed on real hardware \cite{Gasparetto2007,Liu2013,Lu2017}. They also satisfy the convex hull property: on each knot span the curve lies in the convex hull of $p+1$ control points. Since the derivative of a B-spline is a B-spline of one degree less whose control points are scaled differences of the original ones, it is possible to derive a sufficient condition for satisfying kinematic limits that is cheap to evaluate and requires no root finding. It is the most common way to enforce kinematic constraints in modern B-spline trajectory optimization, see, e.g. \cite{Zhou2023,Wang2022}. The bound is not tight, however, and it can reject trajectories that satisfy the limits, which restricts the performance of the robot in applications where the limits are active \cite{de1974splines, Loock2015}.
 
-% Related works
+A third approach evaluates the trajectory at a finite set of sample times and takes the extrema of the samples, e.g. in \cite{Paing2022,Gallant2018, doiron2026accelerating}. While generally tighter to the true extremum of the B-spline, this approach is by construction unsound. The approximation may require a dense sampling to approximate the extremum satisfyingly \cite{Paing2022}. The sampled extrema therefore never exceed the true ones, so the method can miss a violation of the limits, and it converges to the true value only when the number of samples approaches infinity, at a cost that grows linearly with the number of samples.
 
-% Tie-in statement
+The conversion of B-splines to piecewise polynomial form in power form is well established. For instance, Kim et al.\ use it to simplify computations on B-spline curves \cite{Kim2002}. Outside robotics, Fujioka et al.\ \cite{Fujioka2005} fit B-splines to observational data and develop algorithms to locate the extrema of the spline and its derivatives. Their method is limited to cubic splines.
+
+To the best of our knowledge, no existing method has been shown to simultaneously provide guaranteed enclosures of B-spline extrema with controllable tightness for arbitrary degrees and derivative orders efficiently. This work proposes an approach that aims to achieve these properties.
+
 
 \section{Problem Statement} \label{sec:problem_statement}
 
-\subsection{B-spline Trajectories as Piecewise Polynomials}
+\subsection{Preliminaries: B-spline Trajectories as Piecewise Polynomials}
 \label{sec:bspline_pp}
 
 Let $\mathbf{q}:[t_p,t_N]\to\mathbb{R}^J$ be a joint-space trajectory of $J$ joints, represented as a B-spline of degree $p$ with $N$ control points $\mathbf{c}_0,\dots,\mathbf{c}_{N-1}\in\mathbb{R}^J$ and a non-decreasing knot vector $t_0\le t_1\le\dots\le t_{N+p}$:
@@ -131,10 +132,10 @@ The basis functions follow the Cox--de Boor recursion,
   B_{n,r}(t) &= \frac{t-t_n}{t_{n+r}-t_n}\,B_{n,r-1}(t)
               + \frac{t_{n+r+1}-t}{t_{n+r+1}-t_{n+1}}\,B_{n+1,r-1}(t),
 \end{align}
-with the convention that terms with a zero denominator vanish. In practice, such degenerate knot spans are empty and do not have incidence on the trajectory. The basis functions are non-negative, sum to one, and $B_{n,p}$ has compact support $[t_n,t_{n+p+1})$.
+with the convention that terms with a zero denominator vanish. In practice, such degenerate knot spans are empty and can negate the continuity property of the B-spline. Therefore, they are not typically used in trajectory optimization. The basis functions are non-negative, sum to one, and $B_{n,p}$ has compact support $[t_n,t_{n+p+1})$.
 
 \paragraph*{Piecewise polynomial structure}
-Within each knot span $[t_{i+p},t_{i+p+1})$, $i=0,\dots,m-1$ with $m=N-p$, only the $p+1$ basis functions $B_{i,p},\dots,B_{i+p,p}$ are non-zero, and each is a polynomial of degree $p$. Hence $\mathbf{q}$ restricted to span $i$ is a vector-valued polynomial depending on the local control points $\mathbf{c}_i,\dots,\mathbf{c}_{i+p}$ only. With the local parameter
+Within each of the $m$ knot spans $[t_{i+p},t_{i+p+1})$, $i=0,\dots,m-1$ with $m=N-p$, only the $p+1$ basis functions $B_{i,p},\dots,B_{i+p,p}$ are non-zero, and each is a polynomial of degree $p$. Hence $\mathbf{q}$ restricted to span $i$ is a vector-valued polynomial depending on the local control points $\mathbf{c}_i,\dots,\mathbf{c}_{i+p}$ only. With the local parameter
 \begin{equation}
   \tau=\frac{t-t_{i+p}}{\Delta_i}\in[0,1],\qquad \Delta_i=t_{i+p+1}-t_{i+p},
 \end{equation}
@@ -149,22 +150,17 @@ with coefficients given by
   \label{eq:coeff_map}
 \end{equation}
 where $A_i=[\mathbf{a}_{i,0}\ \cdots\ \mathbf{a}_{i,p}]^{\top}$ and $C_i=[\mathbf{c}_i\ \cdots\ \mathbf{c}_{i+p}]^{\top}$ both lie in $\mathbb{R}^{(p+1)\times J}$, and the basis matrix $M_i\in\mathbb{R}^{(p+1)\times(p+1)}$ depends only on the knots $t_i,\dots,t_{i+2p+1}$.
-where the basis matrix $M_i\in\mathbb{R}^{(p+1)\times(p+1)}$ depends only on the knots $t_i,\dots,t_{i+2p+1}$. The polynomial coefficients are therefore a fixed linear map of the control points, which are the decision variables of the trajectory optimization.
+The polynomial coefficients are therefore a fixed linear map of the control points, which are the decision variables of the trajectory optimization.
 
 \paragraph*{Derivatives}
 For $k\ge 0$, differentiating~\eqref{eq:local_poly} with respect to time gives
 \begin{equation}
   \mathbf{q}^{(k)}(t)=\Delta_i^{-k}\,P_i^{(k)}(\tau),
 \end{equation}
-where $P_i^{(k)}$ is a polynomial of degree $p-k$ in $\tau$. For uniform knots, $\Delta_i=T/m$ for total duration $T$, so the time scaling is the constant factor $(m/T)^k$. Since $B_{n,p}\in C^{p-1}$ at knots of multiplicity one, $\mathbf{q}$ and its derivatives up to order $p-1$ are continuous across span boundaries, while $\mathbf{q}^{(p)}$ is piecewise constant and generally discontinuous. In particular, $P_i^{(p-1)}$ is linear in $\tau$ on each span, a fact exploited in Section~\ref{sec:method}.
+where $P_i^{(k)}$ is a polynomial of degree $p-k$ in $\tau$. Note that for uniformly spaced knots, $\Delta_i=T/m$ for total duration $T$, so the time scaling is the constant factor $(m/T)^k$. Since $B_{n,p}\in C^{p-2}$ at knots of multiplicity one, $\mathbf{q}$ and its derivatives up to order $p-2$ are continuous across span boundaries, while $\mathbf{q}^{(p)}$ is piecewise constant and generally discontinuous. In particular, $P_i^{(p-2)}$ is linear in $\tau$ on each span, a fact exploited in Section~\ref{sec:proposed_method}.
 
-\paragraph*{Consequence for constraint evaluation}
-Kinematic limits on $\mathbf{q}^{(k)}$, $k\le p-2$, require the extrema of each joint's $k$-th derivative over the whole trajectory. As $\mathbf{q}^{(k)}$ is continuous and piecewise polynomial, these extrema occur either at span boundaries or at interior roots of $P_i^{(k+1)}$ on $(0,1)$. Therefore, locating the roots of the local polynomials yields the extrema over the continuous domain.
 
-% Requires: \usepackage{amsmath,amssymb,amsthm}  (for the problem environment, or replace by a plain paragraph)
-% Notation follows Sec.~\ref{sec:bspline_pp}.
-
-\section{Problem Statement}
+\subsection{Problem Statement}
 \label{sec:problem}
 
 Let $\mathbf{q}:[0,T]\to\mathbb{R}^J$ be a joint-space trajectory represented by a B-spline of degree $p$ with $N$ control points and total duration $T$, as defined in Section~\ref{sec:bspline_pp}, and let $q_j$ denote its $j$-th joint component. Kinematic limits on velocity, acceleration, jerk, and higher-order derivatives are constraints of the form
@@ -173,7 +169,7 @@ Let $\mathbf{q}:[0,T]\to\mathbb{R}^J$ be a joint-space trajectory represented by
   \qquad \forall\, t\in[0,T],
   \label{eq:limits}
 \end{equation}
-for joints $j=1,\dots,J$ and derivative orders $k=0,\dots,d$, where $d\le p-2$. Verifying~\eqref{eq:limits} requires the extrema of each derivative over the entire continuous time domain,
+for joints $j=1,\dots,J$ and derivative orders $k=0,\dots,d$. Verifying~\eqref{eq:limits} continuously requires the extrema of each derivative over the entire continuous time domain,
 \begin{equation}
   q_{j,k}^{\min}=\min_{t\in[0,T]} q_j^{(k)}(t),
   \qquad
@@ -183,29 +179,42 @@ for joints $j=1,\dots,J$ and derivative orders $k=0,\dots,d$, where $d\le p-2$. 
 
 
 \begin{problem}[Certified derivative extrema]
-Given the control points $\mathbf{c}_0,\dots,\mathbf{c}_{N-1}$, the degree $p$, the knot vector, the duration $T$, a maximal derivative order $d\le p-2$, and a tolerance $\varepsilon>0$, compute for every joint $j$ and every order $k=0,\dots,d$ an enclosure $[\,\underline{b}_{j,k},\overline{b}_{j,k}\,]$ such that:
+Given the control points $\mathbf{c}_0,\dots,\mathbf{c}_{N-1}$, the degree $p$, the knot vector, the duration $T$, a maximal derivative order $d$, and a tolerance $\varepsilon>0$, compute for every joint $j$ and every order $k=0,\dots,d$ an enclosure $[\,\underline{b}_{j,k},\overline{b}_{j,k}\,]$ such that:
 \begin{enumerate}
   \item \emph{(Soundness)} $\underline{b}_{j,k}\le q_{j,k}^{\min}$ and $q_{j,k}^{\max}\le\overline{b}_{j,k}$;
   \item \emph{(Tightness)} the overestimation $q_{j,k}^{\min}-\underline{b}_{j,k}$ and $\overline{b}_{j,k}-q_{j,k}^{\max}$ is controlled by $\varepsilon$ and vanishes as $\varepsilon\to 0$.
 \end{enumerate}
 \end{problem}
 
-Soundness guarantees that no violation of~\eqref{eq:limits} is missed: if $\underline{L}_{j,k}\le\underline{b}_{j,k}$ and $\overline{b}_{j,k}\le\overline{L}_{j,k}$, the trajectory is certified feasible for all $t\in[0,T]$. Tightness limits false rejections of feasible trajectories. As $\mathbf{q}^{(k)}$ is piecewise polynomial of degree $p-k$ with $p-k\ge 2$ for $k\le d$, the problem reduces to finding, on each of the $m=N-p$ segments, the real roots of the polynomial $P_i^{(k+1)}$ of degree $p-k-1$ in $[0,1]$, which has no closed-form solution in general for $p-k-1\ge 5$. The method must also be fast enough to be evaluated repeatedly, for instance inside a trajectory optimization loop. In this work we address kinematic constraints on a single trajectory only.
+Soundness guarantees that no violation of~\eqref{eq:limits} is missed: if $\underline{L}_{j,k}\le\underline{b}_{j,k}$ and $\overline{b}_{j,k}\le\overline{L}_{j,k}$, the trajectory is certified feasible for all $t\in[0,T]$. Tightness limits false rejections of feasible trajectories. As $\mathbf{q}^{(k)}$ is piecewise polynomial of degree $p-k$ with $p-k\ge 2$ for $k\le d$, the problem reduces to finding, on each of the $m=N-p$ segments, the real roots of the polynomial $P_i^{(k+1)}$ of degree $p-k-1$ in $[0,1]$, which has no closed-form solution in general for $p-k-1\ge 5$. 
+
 
 \section{Proposed method} \label{sec:proposed_method}
-% Requires: \usepackage{algorithm}, \usepackage{algpseudocode}, \usepackage{amsmath,amssymb}
-% \iv{f}(X) denotes the interval extension of f over the interval X.
-% Candidate times follow from the affine map t_i + \Delta_i * tau and are carried along with E_k.
-% Segment endpoints are added for every segment (duplicates at shared knots are harmless).
 
-\begin{algorithm}[t]
+We propose to start by segmenting the B-spline in its polynomials using classical methods described in \cite{Kim2002}, and proceed by finding the roots of each polynomial sequentially, starting at the piecewise linear polynomial (which has derivative order $k=p-2$), and cascading to higher derivative orders using the procedure described in Algorithm.~\ref{alg:cascade}. 
+
+\begin{algorithm}[!htbp]
 \caption{Certified extrema of a B-spline and its derivatives}
 \label{alg:cascade}
 \begin{algorithmic}[1]
-\Require Segment polynomials $P_1,\dots,P_m$ of degree $p$ on $[0,1]$, order $d<p-1$, tolerance $\varepsilon$, duration $T$
+\Require Segment polynomials $P_1,\dots,P_m$ of degree $p$ on $[0,1]$, order $d<p-2$, tolerance $\varepsilon$, duration $T$
 \Ensure Interval enclosures $\mathcal{E}_k$ of all candidate extrema of $P^{(k)}$, $k=0,\dots,d$
 \Statex
+
+\Procedure{SafeNewton}{$f,\ell,u,\varepsilon$} \Comment{requires $f(\ell)f(u)\le 0$; returns $[\ell,u]$ with $u-\ell<\varepsilon$ containing a root}
+\label{alg:SafeNewton}
+  \State $x \gets (\ell+u)/2$
+  \While{true}
+    \If{$f(\ell)\,f(x)\le 0$} $u\gets x$ \Else{} $\ell\gets x$ \EndIf \Comment{shrink bracket}
+    \If{$u-\ell<\varepsilon$} \State \Return $[\ell,u]$ \EndIf
+    \State $x_N \gets x - f(x)/f'(x)$
+    \State $x \gets x_N$ if $\ell<x_N<u$, \textbf{else} $(\ell+u)/2$ \Comment{bisection fallback}
+  \EndWhile
+\EndProcedure
+\Statex
+
 \Procedure{Refine}{$f,\mathcal{R}$} \Comment{$\mathcal{R}$ encloses the roots of $f'$}
+\label{alg:Refine}
   \State $\mathcal{R}' \gets \{\, r\in\mathcal{R} : 0\in\iv{f}(r) \,\}$ \Comment{keep enclosures that may hold a root}
   \For{each gap $[g,h]$ of $[0,1]\setminus\bigcup\mathcal{R}$} \Comment{$f$ monotone on $[g,h]$}
     \If{$f(g)\,f(h)\le 0$}
@@ -215,12 +224,13 @@ Soundness guarantees that no violation of~\eqref{eq:limits} is missed: if $\unde
   \State \Return $\mathcal{R}'$
 \EndProcedure
 \Statex
+
 \State $\mathcal{E}_k \gets \emptyset$ for $k=0,\dots,d$
 \For{$i=1,\dots,m$}
-  \State $\mathcal{R} \gets \{\tau\in[0,1] : P_i^{(p-1)}(\tau)=0\}$ as point intervals \Comment{linear: exact}
+  \State $\mathcal{R} \gets \{\tau\in[0,1] : P_i^{(p-2)}(\tau)=0\}$ as point intervals \Comment{linear: exact}
   \For{$k=p-2,\dots,0$}
     \If{$k\le d$}
-      \State $\mathcal{E}_k \gets \mathcal{E}_k \cup \{\square P_i^{(k)}(r) : r\in\mathcal{R}\} \cup \{P_i^{(k)}(0),\,P_i^{(k)}(1)\}$
+      \State $\mathcal{E}_k \gets \mathcal{E}_k \cup \{\iv{P_i^{(k)}}(r) : r\in\mathcal{R}\} \cup \{P_i^{(k)}(0),\,P_i^{(k)}(1)\}$
     \EndIf
     \If{$k>0$} \State $\mathcal{R} \gets \textsc{Refine}(P_i^{(k)},\mathcal{R})$ \EndIf
   \EndFor
@@ -229,25 +239,11 @@ Soundness guarantees that no violation of~\eqref{eq:limits} is missed: if $\unde
 \end{algorithmic}
 \end{algorithm}
 
-\begin{algorithm}[t]
-\caption{\textsc{SafeNewton}$(f,\ell,u,\varepsilon)$}
-\label{alg:safenewton}
-\begin{algorithmic}[1]
-\Require Polynomial $f$ with $f(\ell)f(u)\le 0$, tolerance $\varepsilon$
-\Ensure $[\ell,u]$ with $u-\ell<\varepsilon$ and a sign change of $f$
-\State $x \gets (\ell+u)/2$
-\While{true}
-  \If{$f(\ell)\,f(x)\le 0$} $u\gets x$ \Else{} $\ell\gets x$ \EndIf \Comment{shrink bracket}
-  \If{$u-\ell<\varepsilon$} \Return $[\ell,u]$ \EndIf
-  \State $x_N \gets x - f(x)/f'(x)$
-  \State $x \gets x_N$ if $\ell<x_N<u$, \textbf{else} $(\ell+u)/2$ \Comment{bisection fallback}
-\EndWhile
-\end{algorithmic}
-\end{algorithm}
 
 \subsection{Soundness of the Cascade}
 \label{sec:soundness}
 
+We now prove the soundness of the cascade algorithm, supported by three assumptions.
 % Refers to Algorithm~\ref{alg:cascade}, Algorithm~\ref{alg:safenewton}, Problem~1 and Sec.~\ref{sec:bspline_pp}.
 
 \paragraph*{Notation}
@@ -262,14 +258,14 @@ The signs of $f_k$ at the points used in \textsc{Refine} and \textsc{SafeNewton}
 \end{assumption}
 
 \begin{assumption}[Base case]\label{as:base}
-The initial set $\mathcal{R}_{p-2}$ in Algorithm~\ref{alg:cascade} encloses $Z_{p-1}$. Since $f_{p-1}$ is linear, this holds with the point interval $[-a_0/a_1,\,-a_0/a_1]$ when $f_{p-1}(\tau)=a_1\tau+a_0$ with $a_1\neq0$ and the root lies in $[0,1]$. If $a_1=0\neq a_0$ then $Z_{p-1}=\emptyset$ and $\mathcal{R}_{p-2}=\emptyset$. If $f_{p-1}\equiv0$ we take $\mathcal{R}_{p-2}=\{[0,1]\}$.
+The initial set $\mathcal{R}_{p-2}$ in Algorithm~\ref{alg:cascade} encloses $Z_{p-2}$. Since $f_{p-2}$ is linear, this holds with the point interval $[-a_0/a_1,\,-a_0/a_1]$ when $f_{p-2}(\tau)=a_1\tau+a_0$ with $a_1\neq0$ and the root lies in $[0,1]$. If $a_1=0\neq a_0$ then $Z_{p-2}=\emptyset$ and $\mathcal{R}_{p-2}=\emptyset$. If $f_{p-2}\equiv0$ we take $\mathcal{R}_{p-2}=\{[0,1]\}$.
 \end{assumption}
 
 \begin{lemma}[Reduction to segments]\label{lem:segments}
-Let $0\le k\le p-1$, let the interior knots have multiplicity one, and let $\Delta_i=t_{i+p+1}-t_{i+p}$. Then the range of $q_j^{(k)}$ over $[t_p,t_N]$ equals the union over segments $i$ of the ranges of $\Delta_i^{-k}P_{i,j}^{(k)}$ over $[0,1]$.
+Let $0\le k\le p-2$, let the interior knots have multiplicity one, and let $\Delta_i=t_{i+p+1}-t_{i+p}$. Then the range of $q_j^{(k)}$ over $[t_p,t_N]$ equals the union over segments $i$ of the ranges of $\Delta_i^{-k}P_{i,j}^{(k)}$ over $[0,1]$.
 \end{lemma}
 \begin{proof}
-On the half-open span $[t_{i+p},t_{i+p+1})$ we have $q_j^{(k)}(t)=\Delta_i^{-k}P_{i,j}^{(k)}(\tau)$ with $\tau\in[0,1)$. At an interior knot, $q_j^{(k)}$ is continuous because $q_j\in C^{p-1}$, so its value is the left limit $\Delta_i^{-k}P_{i,j}^{(k)}(1)$. At $t_N$ the value is defined by the same continuity. Hence every value of $q_j^{(k)}$ is attained by some piece on $[0,1]$, and every value of every piece on the closed interval $[0,1]$, including $\tau=1$, is attained by $q_j^{(k)}$.
+On the half-open span $[t_{i+p},t_{i+p+1})$ we have $q_j^{(k)}(t)=\Delta_i^{-k}P_{i,j}^{(k)}(\tau)$ with $\tau\in[0,1)$. At an interior knot, $q_j^{(k)}$ is continuous because $q_j\in C^{p-2}$, so its value is the left limit $\Delta_i^{-k}P_{i,j}^{(k)}(1)$. At $t_N$ the value is defined by the same continuity. Hence every value of $q_j^{(k)}$ is attained by some piece on $[0,1]$, and every value of every piece on the closed interval $[0,1]$, including $\tau=1$, is attained by $q_j^{(k)}$.
 \end{proof}
 
 \begin{lemma}[Candidate set]\label{lem:candidates}
@@ -287,7 +283,7 @@ $f$ is continuous on the compact set $[0,1]$, so it attains its minimum and maxi
 Let $f$ be continuous with $f(\ell_0)f(u_0)\le0$. Then, under Assumption~\ref{as:sign}, every interval $[\ell,u]$ held by Algorithm~\ref{alg:safenewton} after any update step satisfies $[\ell,u]\subseteq[\ell_0,u_0]$ and $f(\ell)f(u)\le0$. In particular, whenever the algorithm returns, $[\ell,u]$ contains a root of $f$ in $[\ell_0,u_0]$. This holds regardless of how the iteration $x$ is chosen, as long as $x\in[\ell,u]$, and independently of $\varepsilon$ and of any iteration cap.
 \end{lemma}
 \begin{proof}
-We argue by induction on the updates. The invariant holds initially. In one update, either $f(\ell)f(x)\le0$ and we set $u\gets x$, which gives $f(\ell)f(u)=f(\ell)f(x)\le0$ directly. Or $f(\ell)f(x)>0$, so $f(\ell)\ne0$ and $f(x)$ has the same sign as $f(\ell)$, and we set $\ell\gets x$. Then $f(x)f(u)=\dfrac{f(x)}{f(\ell_{\mathrm{old}})}\,f(\ell_{\mathrm{old}})f(u)\le0$, because the ratio is positive and $f(\ell_{\mathrm{old}})f(u)\le0$ by the induction hypothesis. The point $x$ is either a Newton iterate accepted only if $\ell<x_N<u$, or the midpoint of $[\ell,u]$, so $x\in[\ell,u]$ and the bracket stays inside $[\ell_0,u_0]$. Finally, $f(\ell)f(u)\le0$ and continuity give a root in $[\ell,u]$ by the intermediate value theorem.
+We argue by induction on the updates. The invariant holds initially. In one update, either $f(\ell)f(x)\le0$ and we set $u\gets x$, which gives $f(\ell)f(u)=f(\ell)f(x)\le0$ directly. Or $f(\ell)f(x)>0$, so $f(\ell)\ne0$ and $f(x)$ has the same sign as $f(\ell)$, and we set $\ell\gets x$. The point $x$ is either a Newton iterate accepted only if $\ell<x_N<u$, or the midpoint of $[\ell,u]$, so $x\in[\ell,u]$ and the bracket stays inside $[\ell_0,u_0]$. Finally, $f(\ell)f(u)\le0$ and continuity give a root in $[\ell,u]$ by the intermediate value theorem.
 \end{proof}
 
 \begin{lemma}[\textsc{Refine}]\label{lem:refine}
@@ -313,9 +309,9 @@ Let Assumptions~\ref{as:ia}--\ref{as:base} hold and let $0\le d\le p-2$. For eac
 \begin{proof}
 Fix a segment and a joint, and drop the indices $i,j$.
 
-\emph{(1) Invariant, by downward induction on $k$.} For $k=p-2$, the set $\mathcal{R}$ is the set from Assumption~\ref{as:base}, which encloses $Z_{p-1}=Z_{k+1}$. Suppose $\mathcal{R}_k$ encloses $Z_{k+1}$ for some $k\ge1$. Algorithm~\ref{alg:cascade} sets $\mathcal{R}_{k-1}=\textsc{Refine}(f_k,\mathcal{R}_k)$. Since $f_k'=f_{k+1}$, Lemma~\ref{lem:refine} applies and shows that $\mathcal{R}_{k-1}$ encloses $Z_k=Z_{(k-1)+1}$.
+\emph{(1) Invariant, by downward induction on $k$.} For $k=p-2$, the set $\mathcal{R}$ is the set from Assumption~\ref{as:base}, which encloses $Z_{p-2}=Z_{k+1}$. Suppose $\mathcal{R}_k$ encloses $Z_{k+1}$ for some $k\ge1$. Algorithm~\ref{alg:cascade} sets $\mathcal{R}_{k-1}=\textsc{Refine}(f_k,\mathcal{R}_k)$. Since $f_k'=f_{k+1}$, Lemma~\ref{lem:refine} applies and shows that $\mathcal{R}_{k-1}$ encloses $Z_k=Z_{(k-1)+1}$.
 
-\emph{(2) Segment bounds.} For $k\le d$, the algorithm adds to $\mathcal{E}_k$ the set $\mathcal{C}(f_k,\mathcal{R}_k)$ multiplied by the factor $(m/T)^k$. Since $\mathcal{R}_k$ encloses the roots of $f_k'=f_{k+1}$ by (1), Lemma~\ref{lem:candidates} gives that $f_k(\tau)\in[\inf\bigcup\mathcal{C},\sup\bigcup\mathcal{C}]$ for all $\tau\in[0,1]$. For uniform knots $\Delta_i=T/m$, so $(m/T)^k=\Delta_i^{-k}>0$ and multiplication by it preserves enclosure and order.
+\emph{(2) Segment bounds.} For $k\le d$, the algorithm adds to $\mathcal{E}_k$ the set $\mathcal{C}(f_k,\mathcal{R}_k)$ multiplied by the segment-constant factor $(\Delta_i)^-k$. Since $\mathcal{R}_k$ encloses the roots of $f_k'=f_{k+1}$ by (1), Lemma~\ref{lem:candidates} gives that $f_k(\tau)\in[\inf\bigcup\mathcal{C},\sup\bigcup\mathcal{C}]$ for all $\tau\in[0,1]$.
 
 \emph{(3) Combination.} By Lemma~\ref{lem:segments}, every value of $q_j^{(k)}$ on $[t_p,t_N]$ is a value of $\Delta^{-k}P_{i,j}^{(k)}$ on $[0,1]$ for some segment $i$. By (2) it lies in the interval spanned by the candidates of that segment, and hence in the interval spanned by the union over all segments, which is $[\inf\bigcup\mathcal{E}_k,\sup\bigcup\mathcal{E}_k]$.
 \end{proof}
@@ -329,24 +325,20 @@ By Lemma~\ref{lem:newton}, soundness does not depend on $\varepsilon$ nor on whe
 \end{remark}
 
 \begin{remark}[Floating-point arithmetic]
-The proof is stated for exact sign evaluation and an outward-rounded interval evaluator. In an implementation, Assumption~\ref{as:sign} holds if the sign tests in \textsc{Refine} and \textsc{SafeNewton} are certified, for instance by deciding the sign of $f(x)$ from the interval $\iv{f}{X}$ and treating undecided cases as sign changes, and if the base root $-a_0/a_1$ is replaced by its outward-rounded enclosure.
-\end{remark}
-
-\begin{remark}[Other base cases]
-The cascade only needs an enclosure of $Z_{p-1}$ as its starting point. Any certified solver for a polynomial of higher degree, such as closed-form roots bracketed with interval arithmetic, can replace the linear case, and the proof is unchanged with $p-1$ replaced by the starting derivative order.
+The proof is stated for exact sign evaluation and an outward-rounded interval evaluator. In an implementation, Assumption~\ref{as:sign} holds if the sign tests in \textsc{Refine} and \textsc{SafeNewton} are certified, for instance by deciding the sign of $f(x)$ from the interval $\iv{f}(x)$ and treating undecided cases as sign changes, and if the base root $-a_0/a_1$ is replaced by its outward-rounded enclosure.
 \end{remark}
 
 
 \section{Complexity analysis} \label{sec:complexity_analysis}
 \paragraph*{Notation}
-The trajectory has $N$ control points, degree $p$, $J$ joints, and $m=N-p$ segments. The local tolerance is $\varepsilon_\ell=m\,\varepsilon$. At cascade level $k$ the polynomial $f_k=P^{(k)}$ has degree $\delta=p-k\in\{2,\dots,p\}$. We count real or interval arithmetic operations, and an interval operation costs a constant factor more than a real one. Evaluating a polynomial of degree $\delta$ by Horner's scheme, or its derivative, costs $O(\delta)$. Let $n_k$ be the number of root enclosures held at level $k$, and let $r=\max_k n_k$ be the largest such number. Let $I$ be the maximal number of iterations of one call to \textsc{SafeNewton}.
+We consider a clamped, uniform B-spline for the complexity analysis and the experiments. The trajectory has $N$ control points, degree $p$, $J$ joints, and $m=N-p$ segments. The local tolerance is $\varepsilon_\ell=m\,\varepsilon$. At cascade level $k$ the polynomial $f_k=P^{(k)}$ has degree $\delta=p-k\in\{2,\dots,p\}$. We count real or interval arithmetic operations, and an interval operation costs a constant factor more than a real one. Evaluating a polynomial of degree $\delta$ by Horner's scheme, or its derivative, costs $O(\delta)$. Let $n_k$ be the number of root enclosures held at level $k$, and let $r=\max_k n_k$ be the largest such number. Let $I$ be the maximal number of iterations of one call to \textsc{SafeNewton}.
 
 \begin{proposition}[Time complexity]\label{prop:time}
 Algorithm~\ref{alg:cascade} runs in
 \begin{equation}
   T(N,p,J)=O\big(J\,(N-p)\,r\,I\,p^{2}\big)
 \end{equation}
-operations, and since $r\le p-1$ in the generic case below, $T=O\big(J\,(N-p)\,I\,p^{3}\big)$.
+operations, and since $r\le p-2$ in the generic case below, $T=O\big(J\,(N-p)\,I\,p^{3}\big)$.
 \end{proposition}
 
 \begin{proof}
@@ -354,7 +346,7 @@ The segments and joints are processed independently, so the total cost is $J\,m$
 
 \emph{Local polynomial.} The coefficients of the segment are obtained as $A_i=M_iC_i$ with $M_i\in\mathbb{R}^{(p+1)\times(p+1)}$ and $C_i\in\mathbb{R}^{(p+1)\times J}$, which costs $O(p^2J)$ per segment, i.e., $O(p^2)$ per polynomial.
 
-\emph{Derivatives.} Computing $f_1,\dots,f_{p-1}$ by repeated differentiation of the coefficient array costs $\sum_{\delta=2}^{p}O(\delta)=O(p^2)$.
+\emph{Derivatives.} Computing $f_1,\dots,f_{p-2}$ by repeated differentiation of the coefficient array costs $\sum_{\delta=2}^{p}O(\delta)=O(p^2)$.
 
 \emph{Cascade level $k$ ($\delta=p-k$).} With $n_k\le r$ root enclosures at hand, \textsc{Refine} performs
 \begin{enumerate}
@@ -364,44 +356,26 @@ The segments and joints are processed independently, so the total cost is $J\,m$
 \end{enumerate}
 The Newton calls dominate, so the cost of level $k$ is $O\big((n_k+1)\,I\,\delta\big)=O(r\,I\,\delta)$.
 
-\emph{Sum over levels.} $\sum_{\delta=2}^{p}O(r I\delta)=O(r\,I\,p^2)$. Adding the $O(p^2)$ terms above gives $O(r I p^2)$ per polynomial and $O(J\,m\,r\,I\,p^2)$ in total. Finally, $n_k\le\delta-1$ when each enclosure contains at most one real root of $f_{k+1}$, which gives $r\le p-1$.
+\emph{Sum over levels.} $\sum_{\delta=2}^{p}O(r I\delta)=O(r\,I\,p^2)$. Adding the $O(p^2)$ terms above gives $O(r I p^2)$ per polynomial and $O(J\,m\,r\,I\,p^2)$ in total. Finally, $n_k\le\delta-1$ when each enclosure contains at most one real root of $f_{k+1}$, which gives $r\le p-2$.
 \end{proof}
 
 \begin{remark}[Dependence on $N$, $p$, $J$]
-For a fixed degree, the cost is linear in the number of control points and in the number of joints. In $p$ it is quadratic when the number of root enclosures per level is bounded by a constant (the typical case), and cubic in the worst case $r=p-1$. The segments and joints are independent and can be processed in parallel. The cost does not decrease with a smaller $d$, since the roots of $f_1,\dots,f_{d+1}$ are needed to report the extrema of all orders $0,\dots,d$. Only the candidate recording of order $k\le d$ depends on $d$, with a cost of $O(\delta\,n_k)$ per level, already included above.
-\end{remark}
-
-\begin{remark}[Iterations of \textsc{SafeNewton}]
-The count $I$ depends on $\varepsilon_\ell$. Pure bisection needs $\lceil\log_2(1/\varepsilon_\ell)\rceil$ iterations, and Newton steps near a simple root reduce this to a few iterations because of quadratic convergence. The implementation also bounds $I$ by a fixed cap $I_{\max}$, so $I\le I_{\max}$ always holds. Because the number of iterations needed for the bracket width to fall below $\varepsilon_\ell$ is not guaranteed to be logarithmic unless the Newton step is required to at least halve the previous step, we state the bound in terms of $I$, which is measured in the experiments.
+For a fixed degree, the cost is linear in the number of control points and in the number of joints. In $p$ it is quadratic when the number of root enclosures per level is bounded by a constant (the typical case), and cubic in the worst case $r=p-2$. The segments and joints are independent and can be processed in parallel. The cost does not decrease with a smaller $d$, since the roots of $f_1,\dots,f_{d+1}$ are needed to report the extrema of all orders $0,\dots,d$. Only the candidate recording of order $k\le d$ depends on $d$, with a cost of $O(\delta\,n_k)$ per level, already included above.
 \end{remark}
 
 \begin{remark}[Retained intervals]
-The bound $r\le p-1$ assumes that every enclosure contains at most one root. An interval retained because $0\in\iv{f}(r)$ may contain no root, which can increase $n_k$ by at most the number of new real roots found at that level, so in general $n_k\le n_{k+1}+(p-k)$ and $r=O(p^2)$. The per-level cost is then $O(p^3)$ and the total per polynomial $O(p^4)$. Retention was never triggered in our experiments, so the bound of Proposition~\ref{prop:time} applies in practice.
-\end{remark}
-
-\begin{remark}[Memory]
-The working memory per segment is $O(p^2)$ for the derivative polynomials, plus $O(J\,m\,p)$ for the local polynomials. The output holds at most $n_k+2$ candidates per segment, joint and order $k\le d$, i.e., $O(J\,m\,d\,r)$ intervals, with $r\le p-1$.
+The bound $r\le p-2$ assumes that every enclosure contains at most one root. An interval retained because $0\in\iv{f}(r)$ may contain no root, which can increase $n_k$ by at most the number of new real roots found at that level, so in general $n_k\le n_{k+1}+(p-k)$ and $r=O(p^2)$. The per-level cost is then $O(p^3)$ and the total per polynomial $O(p^4)$. Retention was never triggered in our experiments, so the bound of Proposition~\ref{prop:time} applies in practice.
 \end{remark}
 
 
 \section{Experimental Setup} \label{sec:experimental_setup}
-We compare the proposed method against two baselines that also solve Problem~1: a
-discretization-based method, which evaluates $q_j^{(k)}$ at $n_s=\mathrm{XX}$ uniformly spaced times
-and takes the minimum and maximum of the samples, and a convex-hull-based method, which bounds
-$q_j^{(k)}$ by the range of the control points of the derivative B-spline. All methods are applied
-to derivative orders $k=0,\dots,d$ with $d=\mathrm{2}$, i.e. searching for extrema of position, velocity, and acceleration.
+We compare the proposed method against two baselines that also solve Problem~1: a discretization-based method, which evaluates $q_j^{(k)}$ at multiple values of $n_s$ uniformly spaced samples and takes the minimum and maximum of the samples, a convex-hull-based method, which bounds $q_j^{(k)}$ by the range of the control points of the derivative B-spline, and a variant of the proposed method in which the Newton cascade is replaced by computing the real roots of $f_{k+1}$ in $[0,1]$ as eigenvalues of its companion matrix, for each $k\le d$. 
 
-The evaluation uses two datasets of uniform, clamped B-splines (Table~\ref{tab:datasets}), chosen
-to represent B-splines typically used in trajectory optimization. The proposed method is not
-restricted to this setting: it applies to any B-spline with interior knots of multiplicity one and
-$d\le p-2$. The randomized dataset contains $5\,600$ B-splines with $N\in\{12,14,\dots,26\}$ control
-points and degrees $p\in\{4,5,\dots,10\}$. The optimized dataset contains $25\,600$ B-splines
-generated by trajectory optimization with blast~\cite{XX}, all with $N=16$ control points and
-degree $p=5$. Every B-spline is defined for a UR5e manipulator with $J=6$ joints, and each method
-is applied to every joint independently to bound the extrema $q_{j,k}^{\min}$ and $q_{j,k}^{\max}$
-of Problem~1. 
+The variant uses Eigen's c++ implementation for the companion matrix method \cite{edelman1995polynomial, eigenweb}, and evaluates $f_k$ at these roots and at the segment endpoints, using the same piecewise polynomial conversion. Hence, the comparison between the variant and the convex-hull and discretization methods isolates the effect of the polynomial decomposition, and the comparison between the cascade and the variant isolates the effect of the Newton cascade as the root-finding step. The companion variant does not enclose the roots, so its bounds are not certified and $\rho<1$ is possible. All methods are applied to derivative orders $k=0,\dots,d$ with $d=2$, i.e. searching for extrema of position, velocity, and acceleration.
 
-\begin{table}[t]
+The evaluation uses two datasets of uniform, clamped B-splines (Table~\ref{tab:datasets}), chosen to represent B-splines typically used in trajectory optimization. The proposed method is not restricted to this setting: it applies to any B-spline with interior knots of multiplicity one and $d\le p-2$. The randomized dataset contains $5\,600$ B-splines with $N\in\{12,14,\dots,26\}$ control points and degrees $p\in\{4,5,\dots,10\}$. The optimized dataset contains $25\,600$ B-splines generated by trajectory optimization with blast~\cite{doiron2026accelerating}, all with $N=16$ control points and degree $p=5$. Every B-spline is defined for a UR5e manipulator with $J=6$ joints, and each method is applied to every joint independently to bound the extrema $q_{j,k}^{\min}$ and $q_{j,k}^{\max}$ of Problem~1. 
+
+\begin{table}[!htbp]
 \centering
 \caption{Datasets of uniform, clamped B-splines for a UR5e manipulator ($J=6$). $N$: number of control points, $p$: degree.}
 \label{tab:datasets}
@@ -411,7 +385,7 @@ of Problem~1.
 \toprule
 Dataset & B-splines & $N$ & $p$ & Source \\
 \midrule
-Randomized & 5\,600  & 12--26 & 4--10 & Random \\
+Randomized & 5\,600  & 12, 14, \dots, 26 & 4--10 & Random \\
 Optimized  & 25\,600 & 16     & 5     & blast  \\
 \bottomrule
 \end{tabular}
@@ -420,7 +394,7 @@ Optimized  & 25\,600 & 16     & 5     & blast  \\
 \paragraph*{Reference and error metric}
 Ground truth is obtained by a fine discretization: for every joint $j$ and derivative order
 $k\in\{0,1,2\}$ (position, velocity, acceleration), $q_j^{(k)}$ is evaluated at $100\,000$ uniformly
-spaced times over the trajectory duration, and the minimum and maximum of the samples give the
+spaced samples over the trajectory duration, and their minimum and maximum values give the
 reference bounds $\underline{b}^{\mathrm{ref}}_{j,k}$ and $\overline{b}^{\mathrm{ref}}_{j,k}$. Because
 the samples are a subset of the trajectory, these bounds lie within the true extrema.
 To compare methods independently of the units and limits of each joint, each pair of bounds
@@ -444,30 +418,18 @@ underestimated, and $\rho>1$ means that they are overestimated. A sound method r
 contain the true extrema, hence $\rho\ge1$ for every $j$ and $k$. A violation is missed when
 $u^{\mathcal{M}}_{j,k}\le1<u^{\mathrm{ref}}_{j,k}$.
 
-All experiments are run on a single thread of an XX CPU (XX cores, XX GHz base frequency, XX\,GB RAM)
-under XX (operating system), with the code compiled with XX (compiler, version, optimization flags)
-and double-precision arithmetic. Timings are measured with a monotonic wall-clock timer around the
-complete evaluation of one B-spline for all $J$ joints, from the piecewise polynomial conversion to
-the returned bounds. They exclude input and output and the computation of the reference. Each method
-is run $15$ times on every B-spline, the first $5$ runs are discarded to remove cold-start effects
-(instruction and data caches, branch predictors, and frequency scaling), and the reported time is
-the mean of the remaining $10$ runs. Since all methods are deterministic, the returned bounds are
-identical across runs, and the repetitions only reduce the measurement noise of the computation
-time, not the variability of the accuracy results.
+% Note: this is the same paragraph as my other article. Is this problematic?
+The benchmarks were conducted on a computer equipped with an AMD Ryzen 9 9950X 16-Core Processor and 64GB of RAM. The code is written in C++ and an algorithm's benchmark is ran 15 times, discarding the first five runs to minimize CPU warm-up effects. Note that, since all algorithms in this benchmark are deterministic, the multiple runs only serve to reduce the variability of the computation time. 
 
 \section{Results and discussion}\label{sec:results_and_discussion}
 We first study the influence of the tolerance $\varepsilon$ on accuracy and computation time
 (Fig.~\ref{fig:ablation_epsilon}). The tolerance bounds the width of every root enclosure returned
 by \textsc{SafeNewton}, measured as a fraction of the normalized trajectory duration, so that the
 local tolerance on each segment is $m\,\varepsilon$ with $m=N-p$. We sweep
-$\varepsilon\in\{\mathrm{XX}\}$ on the combined dataset, i.e., the union of the randomized and
+$\varepsilon\in\{\mathrm{10^-1, 10^-7}\}$ on the combined dataset, i.e., the union of the randomized and
 optimized sets of Table~\ref{tab:datasets} ($31\,200$ B-splines), with derivative orders
-$k=0,\dots,d$ and $d=\mathrm{XX}$. Accuracy is the relative overestimation $\rho-1$, where $\rho$
-is the ratio of normalized constraint values defined in Section~\ref{sec:setup}, averaged over
-joints, derivative orders and B-splines. Computation time is the mean wall-clock time per B-spline,
-covering the conversion to piecewise polynomial form through the extrema of all $J$ joints and
-excluding the reference computation. It is measured on a single thread of $\mathrm{XX}$
-(hardware) and averaged over $\mathrm{XX}$ repetitions. By Theorem~\ref{thm:soundness}, the returned
+$k=0,\dots,d$ and $d=2$. Note that separating the datasets does not influence the results beyond being generally faster for the optimized trajectories, as they tend to be smoother and have less extrema, thus reducing the number of Newton calls. 
+By Theorem~\ref{thm:soundness}, the returned
 bounds contain the true extrema for every $\varepsilon$, so $\rho\ge1$ throughout. Therefore
 $\varepsilon$ affects only the tightness of the enclosures and the computation time.
 
@@ -480,32 +442,9 @@ $\varepsilon$ affects only the tightness of the enclosures and the computation t
     \label{fig:ablation_epsilon}
 \end{figure}
 
-Decreasing $\varepsilon$ monotonically reduces the overestimation $\rho-1$, from XX at
-$\varepsilon=10^{-1}$ to XX at $\varepsilon=10^{-7}$, while the computation time grows by a factor
-of only XX over the same range. This weak dependence is consistent with the convergence of Newton's
-method near simple roots: each additional decade of accuracy costs few extra iterations, whereas a
-bisection-only search would need $\log_2 10\approx3.3$ more iterations per decade. Between
-$\varepsilon=10^{-1}$ and $\varepsilon=10^{-2}$ the computation time decreases instead. A plausible
-cause is that, for large $\varepsilon$, root enclosures remain wide enough for the interval
-evaluation of the next derivative to contain zero, so they are retained rather than resolved. This
-increases the number of enclosures per level and with it the number of interval and point
-evaluations (Section~\ref{sec:complexity}). This is consistent with the mean number of enclosures
-per level, XX at $\varepsilon=10^{-1}$ versus XX at $\varepsilon=10^{-2}$. At
-$\varepsilon=10^{-7}$ the overestimation is XX, i.e., XX orders of magnitude below XX
-(application-relevant reference, e.g., the constraint tolerance of the controller).
+Decreasing $\varepsilon$ monotonically reduces the overestimation $\rho-1$, from $~70\%$ at $\varepsilon=10^{-1}$ to $< 10^-9 \%$ at $\varepsilon=10^{-7}$, while the computation time grows by a factor of only $~16.8\%$ over the same range. This weak dependence is consistent with the convergence of Newton's method near simple roots: each additional decade of accuracy costs few extra iterations, whereas a bisection-only search would need $\log_2 10\approx3.3$ more iterations per decade. Between $\varepsilon=10^{-1}$ and $\varepsilon=10^{-2}$ the computation time decreases instead. A plausible cause is that, for large $\varepsilon$, root enclosures remain wide enough for the interval evaluation of the next derivative to contain zero, so they are retained rather than resolved. This increases the number of enclosures per level and with it the number of interval and point evaluations (Section~\ref{sec:complexity_analysis}).
 
-We then compare the proposed method with $\varepsilon=10^{-7}$ against three alternatives on the
-same dataset and metrics (Fig.~\ref{fig:comparison}): the convex-hull method, the discretization
-method with $n_s$ uniformly spaced samples, and a variant of the proposed method in which the
-Newton cascade is replaced by computing the real roots of $f_{k+1}$ in $[0,1]$ as eigenvalues of
-its companion matrix, for each $k\le d$. The variant evaluates $f_k$ at these roots and at the
-segment endpoints, and uses the same piecewise polynomial conversion. Hence, the comparison between
-the variant and the convex-hull and discretization methods isolates the effect of the polynomial
-decomposition, and the comparison between the cascade and the variant isolates the effect of the
-Newton cascade as the root-finding step. The companion variant does not enclose the roots, so its
-bounds are not certified and $\rho<1$ is possible. The convex-hull and companion variants do not
-depend on $n_s$, which is the horizontal axis of Fig.~\ref{fig:comparison} and appears there
-only as a constant line.
+We then compare the proposed method with $\varepsilon=10^{-7}$ against three alternatives on the same dataset and metrics (Fig.~\ref{fig:comparison}): the convex-hull method, the discretization method with $n_s$ uniformly spaced samples, and the companion matrix variant. The convex-hull, the Newton cascade and companion variants do not depend on $n_s$, which is the horizontal axis of Fig.~\ref{fig:comparison} and appears there as a constant line.
 
 \begin{figure}[t]
     \centering
@@ -517,33 +456,16 @@ only as a constant line.
     \label{fig:comparison}
 \end{figure}
 
+Fig.~\ref{fig:comparison} shows that neither baseline satisfies both requirements of Problem~1. The convex-hull method is the fastest, $~79.3 \times$ faster than the proposed method, but it violates tightness: its mean overestimation is $83.4\%$ ($\rho\approx1.834$), and it rejects XX\% of the trajectories that are feasible according to the reference. Its bounds depend only on the control points of the derivative spline and not on the extrema actually attained, so they are conservative by construction. The discretization method violates soundness. At $n_s=\mathrm{XX}$ it misses XX\% of the trajectories for which the reference is violated. The missed-violation rate decreases with $n_s$, but no finite $n_s$ guarantees soundness, and a safety margin that compensates for the underestimation cannot be certified without knowing the extrema.
 
-Fig.~\ref{fig:comparison} shows that neither baseline satisfies both requirements of
-Problem~1. The convex-hull method is the fastest, XX times faster than the proposed method, but it
-violates tightness: its mean overestimation is $83.4\%$ ($\rho\approx1.834$), and it rejects XX\%
-of the trajectories that are feasible according to the reference. Its bounds depend only on the
-control points of the derivative spline and not on the extrema actually attained, so they are
-conservative by construction. The discretization method violates soundness. Its samples lie on
-the trajectory, so it tends to underestimate the extrema ($\rho<1$) and can miss violations. At
-$n_s=\mathrm{XX}$ it misses XX\% of the trajectories for which the reference is violated. The
-missed-violation rate decreases with $n_s$, but no finite $n_s$ guarantees soundness, and a safety
-margin that compensates for the underestimation cannot be certified without knowing the extrema.
+The proposed method and the companion variant both reach a mean overestimation below $10^{-7}$. They differ in their guarantees. The proposed method evaluates $f_k$ by interval arithmetic over each root enclosure, so its bounds account for the remaining uncertainty on the root location and, under the assumptions of Theorem~\ref{thm:soundness}, contain the true extrema. The companion variant evaluates $f_k$ at approximate roots obtained from an eigenvalue problem, whose accuracy degrades for ill-conditioned polynomials, in particular with multiple or clustered roots, and it may then yield $\rho<1$. We did not observe this: the minimum $\rho$ over the dataset is XX. The proposed method is $2.4\times$ faster than the companion variant in mean computation time at $\varepsilon=10^{-7}$. Its computation time matches that of the discretization method at $n_s\approx360$, where the latter has a mean $\rho-1$ of XX and misses XX\% of the violations.
 
-The proposed method and the companion variant both reach a mean overestimation below $10^{-7}$.
-They differ in their guarantees. The proposed method evaluates $f_k$ by interval arithmetic over
-each root enclosure, so its bounds account for the remaining uncertainty on the root location and,
-under the assumptions of Theorem~\ref{thm:soundness}, contain the true extrema. The companion
-variant evaluates $f_k$ at approximate roots obtained from an eigenvalue problem, whose accuracy
-degrades for ill-conditioned polynomials, in particular with multiple or clustered roots, and it
-may then yield $\rho<1$. We did not observe this: the minimum $\rho$ over the dataset is XX. The
-proposed method is $2.4\times$ faster than the companion variant in mean computation time at
-$\varepsilon=10^{-7}$. Its computation time matches that of the discretization method at
-$n_s\approx360$, where the latter has a mean $\rho-1$ of XX and misses XX\% of the violations.
 
-\section{Conclusions and future work} \label{sec:conclusion_and_future_work}
-% Summary of method and main results
+\section{Conclusions and future work}
+\label{sec:conclusion_and_future_work}
+We presented a method that computes sound and tight enclosures of the extrema of a B-spline and of its derivatives up to order $d\le p-2$ over the whole trajectory, rather than at sampled times. On $31\,200$ uniform, clamped B-splines for a UR5e, the method with $\varepsilon=10^{-7}$ has a mean overestimation below $10^{-7}$ relative to a $100\,000$-point discretization reference and missed no violation of that reference. The convex-hull method is faster but overestimates the extrema by $83.4\%$ on average, and the discretization method underestimates them and missed XX\% of the violations at $n_s=\mathrm{XX}$. Comparing the cascade with a variant using companion-matrix roots separates the two components of the method. The piecewise polynomial decomposition accounts for the accuracy gain over the convex-hull and discretization methods, as both root-finding variants share it. The Newton cascade accounts for a $2.4\times$ reduction in computation time over the companion variant, and, unlike the companion variant, its bounds account for the uncertainty on the root locations.
 
-% Future works
+The soundness guarantee holds for the stated class of B-splines (interior knots of multiplicity one, $d\le p-2$) and relies on certified interval evaluation and sign tests; extending these guarantees to a fully rounding-aware implementation is a necessary step towards its use in safety-critical settings. Further work includes extending the method to other parametric curves such as NURBS, and using the algorithm inside the trajectory optimization loop instead of only as a final certification step.
 
 \subsection{CRediT author statement}
 \textbf{Thomas Duquette}: 
